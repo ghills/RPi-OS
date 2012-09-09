@@ -40,6 +40,9 @@ and oldFunc,mask
 orr r1,oldFunc
 str r1,[r0]
 
+.unreq mask
+.unreq oldFunc
+
 @ return to lr stored on the stack
 pop {pc}
 

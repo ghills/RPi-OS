@@ -17,6 +17,7 @@ push {lr}
 timeAddr .req r0
 bl GetSystemTimerBase
 ldrd r0,r1,[timeAddr,#4]
+.unreq timeAddr
 
 pop {pc}
 
@@ -39,6 +40,8 @@ checkTime$:
     bl GetTimeStamp
     cmp waitTime,r0 @ disregard high 4 bytes, limits wait to 4 byte value
     bgt checkTime$
+
+.unreq waitTime
 
 pop {pc}
 
