@@ -30,8 +30,8 @@ bl SetGpio
 
 @ wait a while
 waitTime .req r0
-ldr waitTime,=500000
-bl TimerWait
+ldr waitTime,=2000000
+bl Wait
 .unreq waitTime
 
 @ set pin 16 to on
@@ -45,8 +45,8 @@ bl SetGpio
 
 @ wait a while
 waitTime .req r0
-ldr waitTime,=500000
-bl TimerWait
+ldr waitTime,=2000000
+bl Wait
 .unreq waitTime
 
 @ loop forever!!

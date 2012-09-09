@@ -1,26 +1,45 @@
 /* ------------------------------------------------------------------ */
 
-.globl TimerWait
-TimerWait:
-waitTime  .req r0
-timerAddr .req r1
-timeLow   .req r2
-timeHigh  .req r3
+.globl GetSystemTimerBase
+GetSystemTimerBase:
 
-/* set the base timer address */
-ldr timerAddr,=0x20003000
-
-/* get the initial time to base it on */
-ldrd timeLow, timeHigh,[timerAddr,#4]
-add waitTime,timeLow @ disregard high 4 bytes, limits wait to 4 byte value
-
-checkTime$:
-
-/* offset of 4 is the actual tick (8 bytes) */
-ldrd timeLow, timeHigh,[timerAddr,#4]
-cmp waitTime,timeLow
-bgt checkTime$
+ldr r0,=0x20003000
 
 mov pc,lr
+
+/* ------------------------------------------------------------------ */
+
+.globl GetTimeStamp
+GetTimeStamp:
+
+push {lr}
+
+timeAddr .req r0
+bl GetSystemTimerBase
+ldrd r0,r1,[timeAddr,#4]
+
+pop {pc}
+
+/* ------------------------------------------------------------------ */
+
+.globl Wait
+Wait:
+
+push {lr}
+
+/* save the time to wait */
+waitTime  .req r2
+mov waitTime,r0
+
+/* get the initial time to base it on */
+bl GetTimeStamp
+add waitTime,r0 @ disregard high 4 bytes, limits wait to 4 byte value
+
+checkTime$:
+    bl GetTimeStamp
+    cmp waitTime,r0 @ disregard high 4 bytes, limits wait to 4 byte value
+    bgt checkTime$
+
+pop {pc}
 
 /* ------------------------------------------------------------------ */
