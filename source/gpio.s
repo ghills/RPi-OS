@@ -1,7 +1,11 @@
+/* ------------------------------------------------------------------ */
+
 .globl GetGpioAddress
 GetGpioAddress:
 ldr r0,=0x20200000
 mov pc,lr
+
+/* ------------------------------------------------------------------ */
 
 .globl SetGpioFunction
 SetGpioFunction:
@@ -22,11 +26,24 @@ functionLoop$:
 
 add r2, r2,lsl #1 @ trick to multiple r2 by 3. 2*r2 + r2
 lsl r1,r2
+
+@ read in existing value first
+mask .req r3
+mov mask,#7
+lsl mask,r2
+mvn mask,mask
+
+oldFunc .req r2
+ldr oldFunc,[r0]
+and oldFunc,mask
+
+orr r1,oldFunc
 str r1,[r0]
 
 @ return to lr stored on the stack
 pop {pc}
 
+/* ------------------------------------------------------------------ */
 
 .globl SetGpio
 SetGpio:
