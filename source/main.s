@@ -29,11 +29,10 @@ bl SetGpio
 .unreq pinVal
 
 @ wait a while
-mov r2,#0x3F0000
-wait1$:
-sub r2,#1
-cmp r2,#0
-bne wait1$
+waitTime .req r0
+ldr waitTime,=500000
+bl TimerWait
+.unreq waitTime
 
 @ set pin 16 to on
 pinNum .req r0
@@ -45,11 +44,10 @@ bl SetGpio
 .unreq pinVal
 
 @ wait a while
-mov r2,#0x3F0000
-wait2$:
-sub r2,#1
-cmp r2,#0
-bne wait2$
+waitTime .req r0
+ldr waitTime,=500000
+bl TimerWait
+.unreq waitTime
 
 @ loop forever!!
 b loop$
