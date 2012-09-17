@@ -49,15 +49,14 @@ pop {r4,pc}
 
 /* ------------------------------------------------------------------ */
 
-
 .section .data
 .align 12
 .globl FrameBufferInfo
 FrameBufferInfo:
-.int 1024   /* #0 Width             */
-.int 768    /* #4 Height            */
-.int 1024   /* #8 vWidth            */
-.int 768    /* #12 vHeight          */
+.int 1920   /* #0 Width             */
+.int 1080   /* #4 Height            */
+.int 1920   /* #8 vWidth            */
+.int 1080   /* #12 vHeight          */
 .int 0      /* #16 GPU - Pitch      */
 .int 16     /* #20 Bit Depth        */
 .int 0      /* #24 X                */
