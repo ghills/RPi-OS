@@ -29,7 +29,8 @@ LINKER = kernel.ld
 
 # The names of all object files that must be generated. Deduced from the 
 # assembly code files in source.
-OBJECTS := $(patsubst $(SOURCE)%.s,$(BUILD)%.o,$(wildcard $(SOURCE)*.s))
+SOBJECTS := $(patsubst $(SOURCE)%.s,$(BUILD)%.o,$(wildcard $(SOURCE)*.s))
+OBJECTS  := $(patsubst $(SOURCE)%.c,$(BUILD)%.o,$(wildcard $(SOURCE)*.c))
 
 # Rule to make everything.
 all: $(TARGET) $(LIST)
@@ -46,12 +47,16 @@ $(TARGET) : $(BUILD)output.elf
 	$(ARMGNU)-objcopy $(BUILD)output.elf -O binary $(TARGET) 
 
 # Rule to make the elf file.
-$(BUILD)output.elf : $(OBJECTS) $(LINKER)
-	$(ARMGNU)-ld --no-undefined $(OBJECTS) -Map $(MAP) -o $(BUILD)output.elf -T $(LINKER)
+$(BUILD)output.elf : $(OBJECTS) $(SOBJECTS) $(LINKER)
+	$(ARMGNU)-ld --no-undefined $(OBJECTS) $(SOBJECTS) -Map $(MAP) -o $(BUILD)output.elf -T $(LINKER)
 
 # Rule to make the object files.
 $(BUILD)%.o: $(SOURCE)%.s
 	$(ARMGNU)-as -I $(SOURCE) $< -o $@
+
+# Rule to make the object files from c
+$(BUILD)%.o: $(SOURCE)%.c
+	$(ARMGNU)-gcc -c $(SOURCE) $< -o $@
 
 # Rule to clean files.
 clean : 
